@@ -1,102 +1,134 @@
-# ESP32 + L298N robot control (WiFi + gamepad + pygame dashboard)
+# ESP32 Robot Dashboard
 
-## 1. Firmware (`esp32_firmware/robot_firmware.ino`)
+So you want to build a simple Robot with a ESP32 you arrive to the right place.
 
-- Wiring used (already set in the code):
-  - Left motor: `PWM1=GPIO16`, `IN1=GPIO33`, `IN2=GPIO32`
-  - Right motor: `PWM2=GPIO4`, `IN3=GPIO26`, `IN4=GPIO25`
-- The ESP32 creates its own WiFi network:
-  - SSID: `RobotESP32`
-  - Password: `robot1234`
-  - Robot IP once connected: `192.168.4.1`
-- Flash it with the Arduino IDE (board "ESP32 Dev Module" or whichever matches your board).
-  Uses the ESP32 Arduino core v3.x `ledc` API (`ledcAttach` / `ledcWrite(pin, ...)`).
-- UDP protocol, port `4210`:
-  - PC -> Robot: `L:<-255..255>,R:<-255..255>\n`
-  - Robot -> PC: `T:up=...,rssi=...,l=...,r=...,batt=...,clients=...\n`
-- There's a watchdog: if no command arrives within 500 ms, the robot stops itself
-  (in case the connection to the dashboard drops).
-- Battery reading is optional and disabled by default (`BATTERY_ENABLED false`).
-  If you add a voltage divider to an ADC pin, enable it and adjust
-  `BATTERY_PIN` / `BATTERY_DIVIDER`.
+## Description
 
-## 2. Dashboard (`dashboard/`)
+This is a configurable dashboard to control a simple 2 wheel robot powered by ESP32.
 
-Requires Python 3 and pygame:
+---
+
+## Hardware
+
+![Wiring Schematic](esquematic.png)
+
+To build this you'll need:
+* ESP32 = 1
+* L298N Motor Driver = 1
+* Yellow Arduino DC Motors = 2
+* Switch = 1
+* 7.4V Battery (or 12V) = 1
+* Battery Connector = 1
+
+> **WARNING:** Battery management was not tested with 12V and the schematic does not show how to make a proper voltage divider. Please research before connecting it.
+
+![Assembled Robot](real_thing.png)
+
+This is a photo of the whole thing assembled. To get the 3D models, go to the `3D_models` directory in this repository.
+
+---
+
+## Dashboard
+
+Control dashboard built in Python 3 using Pygame.
+
+### Requirements & Installation
 
 ```bash
-python -m venv venv   # create your virtual environment
-source venv/bin/activate   # activate it
-```
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Linux/macOS
+# venv\Scripts\activate   # On Windows
 
-```bash
+# Install dependencies
 pip install pygame-ce
 ```
 
-Before running it:
+### Running the Dashboard
 
 1. Connect your PC to the `RobotESP32` WiFi network.
-2. Connect a controller/gamepad (USB or bluetooth) to the PC.
-
-Run:
+2. Connect a gamepad/controller (USB or Bluetooth) to your PC.
+3. Start the application:
 
 ```bash
 cd dashboard
 python3 main.py
 ```
 
-### Screens
+### Dashboard Screens
 
-- **Control**: robot silhouette (each wheel's color shows forward/reverse/stopped),
-  live telemetry panel, active preset, and macro status.
-- **Presets**: pick, create, edit, or delete control mapping presets. Each preset is
-  a list of **mappings**, and each mapping is simply:
+#### Main Interface
+This is the main interface of the dashboard, it will give you real-time telemetry of the robot, wheel direction/speed status, active preset, and active macro state.
 
-  > take this **input** (a joystick axis or a trigger), and map its value from
-  > `[in_min..in_max]` to `[out_min..out_max]` on this **target** motor.
+| Idle State | Moving State |
+| :---: | :---: |
+| ![Main Interface Idle](main_interface(1).png) | ![Main Interface Moving](main_interface(2).png) |
 
-  For example: `Left stick Y: -100..100 -> Motor L: -255..255`. Axes are shown on a
-  `-100..100` scale and triggers on a `0..100` scale; motor outputs go from `-255`
-  to `255`. Several mappings can target the same motor (e.g. one mapping adds
-  throttle, another adds steering) — their outputs are added together and clamped
-  to `-255..255`. To invert a mapping, just swap its `out_min`/`out_max` values
-  (e.g. `out_min=255, out_max=-255`).
+---
 
-  4 presets come built in by default, all built with this same mapping system:
-  1. **Tank**: each stick controls one wheel (forward/back).
-  2. **Split arcade**: one stick (Y axis) drives both wheels forward/back, the other
-     stick (X axis) steers.
-  3. **Triggers + steering**: right trigger accelerates forward, left trigger
-     accelerates in reverse, one stick steers.
-  4. **Single stick**: Y axis = forward/back, X axis = steering, all on one stick.
-- **Macros**: create movement sequences ("autonomous" routines) assigned to a
-  controller button. Each macro is an ordered list of steps
-  `{motor: L/R/BOTH, speed, duration in ms}`. "Single trigger" mode runs the whole
-  sequence once when the button is pressed; "hold" mode cuts the sequence short if
-  you release the button before it finishes. While a macro is running it takes full
-  control of the robot (normal joystick control is paused) and hands it back
-  automatically once it's done.
-- **Controller test**: shows live raw axis and button values from your controller,
-  so you can identify which axis index corresponds to each stick/trigger if the
-  default mapping doesn't match your controller model. From this screen you can
-  adjust and save the mapping (`config/controller_map.json`), invert Y axes, and
-  adjust the deadzone.
+#### Control Presets & Mapping
+Select, create, edit, or delete control mapping presets. Each mapping translates a gamepad input range `[in_min..in_max]` to a target motor PWM range `[out_min..out_max]`. Multiple inputs can target the same motor (e.g., throttle + steering).
 
-### Config files (`dashboard/config/`)
+| Preset Selection | Editing Mappings |
+| :---: | :---: |
+| ![Presets List](presets(1).png) | ![Edit Preset](presets(2).png) |
 
-- `settings.json`: robot IP/port and command send rate (Hz).
-- `controller_map.json`: which raw axis index corresponds to each stick/trigger,
-  Y-axis inversion, deadzone.
-- `presets.json`: saved presets and which one is active.
-- `macros.json`: saved macros.
+**Built-in Presets:**
+1. **Tank:** Each stick controls one wheel independently.
+2. **Split Arcade:** One stick controls drive (Y-axis), the other controls steering (X-axis).
+3. **Triggers + Steering:** Right trigger accelerates forward, left trigger accelerates in reverse, and one stick steers.
+4. **Single Stick:** Full drive and steering assigned to a single analog stick.
 
-Everything is stored as plain JSON, so you can also edit these files by hand if
-you prefer.
+---
+
+#### Macros & Autonomous Sequences
+Create custom movement sequences assigned to controller buttons. Each step defines `{motor: L/R/BOTH, speed, duration ms}`. 
+
+| Macro List | Editing Sequence |
+| :---: | :---: |
+| ![Macro List](macros(1).png) | ![Edit Macro](macros(2).png) |
+
+* **Single Trigger Mode:** Runs the entire sequence once when pressed.
+* **Hold Mode:** Aborts execution if the button is released before completion.
+
+---
+
+#### Controller Test & Calibration
+Displays raw real-time axis and button values from connected gamepads to identify axis indices, adjust deadzones, invert Y-axes, and calibrate controls.
+
+![Controller Test Screen](controller_test.png)
+
+---
+
+## Firmware (`esp32_firmware/robot_firmware.ino`)
+
+- **Wiring Used:**
+  - Left motor: `PWM1=GPIO16`, `IN1=GPIO33`, `IN2=GPIO32`
+  - Right motor: `PWM2=GPIO4`, `IN3=GPIO26`, `IN4=GPIO25`
+- **ESP32 WiFi Access Point:**
+  - **SSID:** `RobotESP32`
+  - **Password:** `robot1234`
+  - **Robot IP:** `192.168.4.1`
+- Flash using the Arduino IDE with board **"ESP32 Dev Module"**. Compatible with ESP32 Arduino core v3.x `ledc` API (`ledcAttach` / `ledcWrite`).
+- **UDP Protocol (Port 4210):**
+  - **PC -> Robot:** `L:<-255..255>,R:<-255..255>\n`
+  - **Robot -> PC:** `T:up=...,rssi=...,l=...,r=...,batt=...,clients=...\n`
+- **Watchdog:** Stops the motors automatically if no command arrives within 500 ms.
+
+---
+
+## Config Files (`dashboard/config/`)
+
+All parameters are persisted as plain JSON files:
+
+* **`settings.json`**: Robot IP/port address and command transmission frequency (Hz).
+* **`controller_map.json`**: Axis index mappings, Y-axis inversion, and gamepad deadzones.
+* **`presets.json`**: Saved mapping presets and active selection.
+* **`macros.json`**: Saved macro sequences.
+
+---
 
 ## Notes
 
-- The position/orientation shown in the silhouette is only a dead-reckoning
-  estimate (it integrates the speeds being sent) — there are no encoders or IMU,
-  so it will drift over time. It's just there to give a visual sense of movement.
-- If you switch controllers (a different gamepad model), you'll likely need to
-  re-adjust `controller_map.json` from the "Controller test" screen.
+- The position/orientation shown in the silhouette is only a dead-reckoning estimate — there are no encoders or IMU, so it will drift over time.
+- If you switch to a different gamepad model, recalibrate your axis mappings from the **Controller test** screen.
