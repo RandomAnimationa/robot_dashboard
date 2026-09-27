@@ -22,7 +22,7 @@ To build this you'll need:
 
 > **WARNING:** Battery management was not tested with 12V and the schematic does not show how to make a proper voltage divider. Please research before connecting it.
 
-![Assembled Robot](docs/real_thing.jpg)
+![Assembled Robot](docs/real_thing.png)
 
 This is a photo of the whole thing assembled. To get the 3D models, go to the `3D_models` directory in this repository.
 
