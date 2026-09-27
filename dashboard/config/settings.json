@@ -1,0 +1,8 @@
+{
+  "robot_ip": "192.168.4.1",
+  "robot_port": 4210,
+  "local_listen_port": 0,
+  "control_rate_hz": 20,
+  "telemetry_timeout_s": 2.0,
+  "max_speed": 255
+}

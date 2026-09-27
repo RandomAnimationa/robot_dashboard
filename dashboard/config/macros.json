@@ -1,0 +1,14 @@
+{
+  "macros": [
+    {
+      "id": "example_spin",
+      "name": "Example: quick spin",
+      "trigger_button": 0,
+      "mode": "on_press",
+      "steps": [
+        { "motor": "L", "speed": 200, "duration_ms": 1000 },
+        { "motor": "BOTH", "speed": 0, "duration_ms": 0 }
+      ]
+    }
+  ]
+}

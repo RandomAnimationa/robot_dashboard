@@ -1,0 +1,168 @@
+{
+  "active_preset": "preset_1790526121",
+  "presets": [
+    {
+      "id": "tank_dual_stick",
+      "name": "Tank (one wheel per stick)",
+      "description": "Left stick controls the left wheel (forward/back), right stick controls the right wheel (forward/back).",
+      "mappings": [
+        {
+          "input": "left_y",
+          "target": "L",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "right_y",
+          "target": "R",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        }
+      ]
+    },
+    {
+      "id": "split_arcade",
+      "name": "Split arcade",
+      "description": "One stick (Y axis) drives both wheels forward/back, the other stick (X axis) steers (added inverted between wheels).",
+      "mappings": [
+        {
+          "input": "left_y",
+          "target": "BOTH",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "right_x",
+          "target": "L",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "right_x",
+          "target": "R",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": 255,
+          "out_max": -255
+        }
+      ]
+    },
+    {
+      "id": "trigger_throttle",
+      "name": "Triggers + steering",
+      "description": "Right trigger accelerates forward, left trigger accelerates in reverse, one stick steers.",
+      "mappings": [
+        {
+          "input": "right_trigger",
+          "target": "BOTH",
+          "in_min": 0,
+          "in_max": 100,
+          "out_min": 0,
+          "out_max": 255
+        },
+        {
+          "input": "left_trigger",
+          "target": "BOTH",
+          "in_min": 0,
+          "in_max": 100,
+          "out_min": 0,
+          "out_max": -255
+        },
+        {
+          "input": "left_x",
+          "target": "L",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "left_x",
+          "target": "R",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": 255,
+          "out_max": -255
+        }
+      ]
+    },
+    {
+      "id": "single_stick",
+      "name": "Single stick",
+      "description": "One stick controls everything: Y axis = forward/back, X axis = steering.",
+      "mappings": [
+        {
+          "input": "left_y",
+          "target": "L",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "left_y",
+          "target": "R",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "left_x",
+          "target": "L",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "left_x",
+          "target": "R",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": 255,
+          "out_max": -255
+        }
+      ]
+    },
+    {
+      "id": "preset_1790526121",
+      "name": "New preset",
+      "description": "",
+      "mappings": [
+        {
+          "input": "right_x",
+          "target": "R",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "right_y",
+          "target": "R",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        },
+        {
+          "input": "left_y",
+          "target": "L",
+          "in_min": -100,
+          "in_max": 100,
+          "out_min": -255,
+          "out_max": 255
+        }
+      ]
+    }
+  ]
+}
