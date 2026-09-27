@@ -10,7 +10,7 @@ This is a configurable dashboard to control a simple 2 wheel robot powered by ES
 
 ## Hardware
 
-![Wiring Schematic](esquematic.png)
+![Wiring Schematic](robot_dashboard/docs/esquematic.png)
 
 To build this you'll need:
 * ESP32 = 1
@@ -22,7 +22,7 @@ To build this you'll need:
 
 > **WARNING:** Battery management was not tested with 12V and the schematic does not show how to make a proper voltage divider. Please research before connecting it.
 
-![Assembled Robot](real_thing.png)
+![Assembled Robot](robot_dashboard/docs/real_thing.jpg)
 
 This is a photo of the whole thing assembled. To get the 3D models, go to the `3D_models` directory in this repository.
 
@@ -62,7 +62,7 @@ This is the main interface of the dashboard, it will give you real-time telemetr
 
 | Idle State | Moving State |
 | :---: | :---: |
-| ![Main Interface Idle](main_interface(1).png) | ![Main Interface Moving](main_interface(2).png) |
+| ![Main Interface Idle](robot_dashboard/docs/main_interface(1).png) | ![Main Interface Moving](robot_dashboard/docs/main_interface(2).png) |
 
 ---
 
@@ -71,7 +71,7 @@ Select, create, edit, or delete control mapping presets. Each mapping translates
 
 | Preset Selection | Editing Mappings |
 | :---: | :---: |
-| ![Presets List](presets(1).png) | ![Edit Preset](presets(2).png) |
+| ![Presets List](robot_dashboard/docs/presets(1).png) | ![Edit Preset](robot_dashboard/docs/presets(2).png) |
 
 **Built-in Presets:**
 1. **Tank:** Each stick controls one wheel independently.
@@ -86,7 +86,7 @@ Create custom movement sequences assigned to controller buttons. Each step defin
 
 | Macro List | Editing Sequence |
 | :---: | :---: |
-| ![Macro List](macros(1).png) | ![Edit Macro](macros(2).png) |
+| ![Macro List](robot_dashboard/docs/macros(1).png) | ![Edit Macro](robot_dashboard/docs/macros(2).png) |
 
 * **Single Trigger Mode:** Runs the entire sequence once when pressed.
 * **Hold Mode:** Aborts execution if the button is released before completion.
@@ -96,7 +96,7 @@ Create custom movement sequences assigned to controller buttons. Each step defin
 #### Controller Test & Calibration
 Displays raw real-time axis and button values from connected gamepads to identify axis indices, adjust deadzones, invert Y-axes, and calibrate controls.
 
-![Controller Test Screen](controller_test.png)
+![Controller Test Screen](robot_dashboard/docs/controller_test.png)
 
 ---
 
